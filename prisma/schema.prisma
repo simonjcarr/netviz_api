@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model NodeType {
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String
+  size      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Nodes      Node[]
+}
+
+model Node {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      NodeType @relation(fields: [typeId], references: [id])
+  typeId    Int
+  tags      TagsOnNodes[]
+  ipv4     String?
+  hostname  String?
+  project   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Nodes      TagsOnNodes[]
+}
+
+model TagsOnNodes {
+  id        Int      @id @default(autoincrement())
+  node      Node     @relation(fields: [nodeId], references: [id])
+  nodeId    Int
+  tag       Tag      @relation(fields: [tagId], references: [id])
+  tagId     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
