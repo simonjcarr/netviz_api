@@ -7,8 +7,17 @@ export default class NodesController {
   }
 
   public async store ({ request }: HttpContextContract) {
+    const data = request.only(['name', 'typeId', 'ipv4', 'hostname', 'project'])
+    let tags = request.only(['tags'])
+    if(tags.tags.length > 0) {
+      data['tags'] = {create: []}
+      tags.tags.forEach(async (tag: any) => {
+        data['tags'].create.push({tag: {connect: {id: tag.id}}})
+      })
+    }
+    console.log(data)
     const node = await prisma.node.create({
-      data: request.only(['name', 'typeId', 'ipv4', 'hostname', 'project']),
+      data: data
     })
     return node
   }
@@ -17,6 +26,14 @@ export default class NodesController {
     return prisma.node.findUnique({
       where: {
         id: parseInt(params.id)
+      },
+      include: {
+        tags: {
+          include: {
+            tag: true
+          }
+        },
+        type: true
       }
     })
   }
