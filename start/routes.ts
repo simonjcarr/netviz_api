@@ -22,7 +22,7 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
   Route.resource('node-types', 'NodeTypeController')
-  Route.resource('nodes', 'NodeController')
+  Route.resource('nodes', 'NodesController')
   Route.resource('tags', 'TagsController')
 }).prefix('api/v1')
 
