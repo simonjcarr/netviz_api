@@ -17,33 +17,33 @@ model NodeType {
   size      Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Nodes      Node[]
+  Nodes     Node[]
 }
 
 model Node {
-  id        Int      @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   name      String
-  type      NodeType @relation(fields: [typeId], references: [id])
+  type      NodeType      @relation(fields: [typeId], references: [id])
   typeId    Int
   tags      TagsOnNodes[]
-  ipv4     String?
+  ipv4      String?
   hostname  String?
   project   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 }
 
 model Tag {
-  id        Int      @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Nodes      TagsOnNodes[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  Nodes     TagsOnNodes[]
 }
 
 model TagsOnNodes {
   id        Int      @id @default(autoincrement())
-  node      Node     @relation(fields: [nodeId], references: [id])
+  node      Node    @relation(fields: [nodeId], references: [id])
   nodeId    Int
   tag       Tag      @relation(fields: [tagId], references: [id])
   tagId     Int
