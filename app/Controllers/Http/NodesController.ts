@@ -3,7 +3,19 @@ import {prisma} from '@ioc:Adonis/Addons/Prisma'
 
 export default class NodesController {
   public async index ({ request }: HttpContextContract) {
-    return prisma.node.findMany()
+    return prisma.node.findMany({include: {
+      tags: {
+        include: {
+          tag: true
+        }
+      },
+      type: true,
+      connectedFrom: {
+        include: {
+          connectedTo: true
+        }
+      }
+    }})
   }
 
   public async store ({ request }: HttpContextContract) {
