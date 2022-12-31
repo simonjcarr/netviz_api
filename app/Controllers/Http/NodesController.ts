@@ -33,7 +33,12 @@ export default class NodesController {
             tag: true
           }
         },
-        type: true
+        type: true,
+        connectedFrom: {
+          include: {
+            connectedTo: true
+          }
+        }
       }
     })
   }

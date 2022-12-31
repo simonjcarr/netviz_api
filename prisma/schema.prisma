@@ -21,17 +21,28 @@ model NodeType {
 }
 
 model Node {
-  id        Int           @id @default(autoincrement())
-  name      String
-  type      NodeType      @relation(fields: [typeId], references: [id])
-  typeId    Int
-  tags      TagsOnNodes[]
-  ipv4      String?
-  hostname  String?
-  project   String?
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id            Int           @id @default(autoincrement())
+  name          String
+  type          NodeType      @relation(fields: [typeId], references: [id])
+  typeId        Int
+  tags          TagsOnNodes[]
+  ipv4          String?
+  hostname      String?
+  project       String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  connectedTo   NodeConnection[]        @relation("NodeConnectionTo")
+  connectedFrom NodeConnection[]        @relation("NodeConnectionFrom")
 }
+
+ model NodeConnection {
+    id        Int      @id @default(autoincrement())
+    connectedTo      Node     @relation("NodeConnectionTo", fields: [connectedToId], references: [id])
+    connectedToId    Int
+    connectedFrom    Node     @relation("NodeConnectionFrom", fields: [connectedFromId], references: [id])
+    connectedFromId  Int
+    // @@id([nodeId, targetId])
+ }
 
 model Tag {
   id        Int           @id @default(autoincrement())
@@ -43,7 +54,7 @@ model Tag {
 
 model TagsOnNodes {
   id        Int      @id @default(autoincrement())
-  node      Node    @relation(fields: [nodeId], references: [id])
+  node      Node     @relation(fields: [nodeId], references: [id])
   nodeId    Int
   tag       Tag      @relation(fields: [tagId], references: [id])
   tagId     Int
