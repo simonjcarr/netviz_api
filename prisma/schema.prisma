@@ -22,7 +22,7 @@ model NodeType {
 
 model Node {
   id            Int           @id @default(autoincrement())
-  name          String
+  label         String        @default("Node")
   type          NodeType      @relation(fields: [typeId], references: [id])
   typeId        Int
   tags          TagsOnNodes[]
