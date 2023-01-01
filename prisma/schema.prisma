@@ -21,28 +21,30 @@ model NodeType {
 }
 
 model Node {
-  id            Int           @id @default(autoincrement())
-  label         String        @default("Node")
-  type          NodeType      @relation(fields: [typeId], references: [id])
+  id            Int              @id @default(autoincrement())
+  label         String           @default("Node")
+  type          NodeType         @relation(fields: [typeId], references: [id])
   typeId        Int
   tags          TagsOnNodes[]
   ipv4          String?
   hostname      String?
   project       String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  connectedTo   NodeConnection[]        @relation("NodeConnectionTo")
-  connectedFrom NodeConnection[]        @relation("NodeConnectionFrom")
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  connectedTo   NodeConnection[] @relation("NodeConnectionTo")
+  connectedFrom NodeConnection[] @relation("NodeConnectionFrom")
+  group         group?           @relation(fields: [groupId], references: [id])
+  groupId       Int?
 }
 
- model NodeConnection {
-    id        Int      @id @default(autoincrement())
-    connectedTo      Node     @relation("NodeConnectionTo", fields: [connectedToId], references: [id])
-    connectedToId    Int
-    connectedFrom    Node     @relation("NodeConnectionFrom", fields: [connectedFromId], references: [id])
-    connectedFromId  Int
-    // @@id([nodeId, targetId])
- }
+model NodeConnection {
+  id              Int  @id @default(autoincrement())
+  connectedTo     Node @relation("NodeConnectionTo", fields: [connectedToId], references: [id])
+  connectedToId   Int
+  connectedFrom   Node @relation("NodeConnectionFrom", fields: [connectedFromId], references: [id])
+  connectedFromId Int
+  // @@id([nodeId, targetId])
+}
 
 model Tag {
   id        Int           @id @default(autoincrement())
@@ -60,4 +62,12 @@ model TagsOnNodes {
   tagId     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model group {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Node      Node[]
 }
