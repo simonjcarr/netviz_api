@@ -60,7 +60,7 @@ export default class NodesController {
       where: {
         id: parseInt(params.id)
       },
-      data: request.only(['name', 'size', 'color']),
+      data: request.only(['label', 'size', 'color']),
     })
     return type
   }
