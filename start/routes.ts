@@ -27,5 +27,6 @@ Route.group(() => {
   Route.post('node-connections/:from/:to', 'NodeConnectionsController.store')
   Route.delete('node-connections/:id', 'NodeConnectionsController.destroy')
   Route.resource('tags', 'TagsController')
+  Route.resource('groups', 'GroupsController')
 }).prefix('api/v1')
 
