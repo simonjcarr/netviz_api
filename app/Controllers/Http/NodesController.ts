@@ -6,6 +6,7 @@ export default class NodesController {
     return prisma.node.findMany({include: {
       tags: {
         include: {
+          
           tag: true
         }
       },
@@ -19,7 +20,8 @@ export default class NodesController {
   }
 
   public async store ({ request }: HttpContextContract) {
-    const data = request.only(['name', 'typeId', 'ipv4', 'hostname', 'project'])
+    const data = request.only(['label', 'typeId', 'ipv4', 'hostname', 'project', 'groupId'])
+    console.log(data)
     let tags = request.only(['tags'])
     if(tags.tags.length > 0) {
       data['tags'] = {create: []}
@@ -46,6 +48,7 @@ export default class NodesController {
           }
         },
         type: true,
+        group: true,
         connectedFrom: {
           include: {
             connectedTo: true

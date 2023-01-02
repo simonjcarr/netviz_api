@@ -24,7 +24,7 @@ Route.group(() => {
   Route.resource('node-types', 'NodeTypeController')
   Route.resource('nodes', 'NodesController')
   Route.get('node-connections/:id', 'NodeConnectionsController.show')
-  Route.post('node-connections/:from/:to', 'NodeConnectionsController.store')
+  Route.post('node-connections', 'NodeConnectionsController.store')
   Route.delete('node-connections/:id', 'NodeConnectionsController.destroy')
   Route.resource('tags', 'TagsController')
   Route.resource('groups', 'GroupsController')
