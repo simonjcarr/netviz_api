@@ -18,6 +18,9 @@ model NodeType {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Nodes     Node[]
+  Shape     Shape?   @relation(fields: [shapeId], references: [id])
+  shapeId   Int?
+  iconCode  String?
 }
 
 model Node {
@@ -33,8 +36,16 @@ model Node {
   updatedAt     DateTime         @updatedAt
   connectedTo   NodeConnection[] @relation("NodeConnectionTo")
   connectedFrom NodeConnection[] @relation("NodeConnectionFrom")
-  group         group           @relation(fields: [groupId], references: [id])
+  group         group            @relation(fields: [groupId], references: [id])
   groupId       Int
+}
+
+model Shape {
+  id        Int        @id @default(autoincrement())
+  name      String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  nodeTypes NodeType[]
 }
 
 model NodeConnection {
