@@ -5,7 +5,6 @@ export default class NodeConnectionsController {
 
   public async show ({ params }: HttpContextContract) {
     const id = parseInt(params.id)
-    console.log(id)
     return prisma.$queryRaw`
     select n.*, t.name as nodeTypeName, t.color as nodeTypeColor from Node n
     join NodeConnection c on n.id = c.connectedToId
