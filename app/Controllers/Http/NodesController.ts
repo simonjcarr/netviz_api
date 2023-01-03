@@ -3,10 +3,13 @@ import {prisma} from '@ioc:Adonis/Addons/Prisma'
 
 export default class NodesController {
   public async index ({ request }: HttpContextContract) {
+    const nodeIdFilter: number = parseInt(request.qs().nodeIdFilter) || 0
+
+    if (nodeIdFilter == 0) {
     return prisma.node.findMany({include: {
       tags: {
         include: {
-          
+
           tag: true
         }
       },
@@ -17,11 +20,46 @@ export default class NodesController {
         }
       }
     }})
+  } else {
+    return prisma.node.findMany({
+      where: {
+        OR: [
+          {
+            id: nodeIdFilter
+          },
+          {connectedFrom: {
+            some: {
+              connectedToId: nodeIdFilter
+            }
+          }},
+          {
+            connectedTo: {
+              some: {
+                connectedFromId: nodeIdFilter
+              }
+            }
+          }
+        ]
+      },
+      include: {
+      tags: {
+        include: {
+
+          tag: true
+        }
+      },
+      type: true,
+      connectedFrom: {
+        include: {
+          connectedTo: true
+        }
+      },
+    }})
+  }
   }
 
   public async store ({ request }: HttpContextContract) {
     const data = request.only(['label', 'typeId', 'ipv4', 'hostname', 'project', 'groupId'])
-    console.log(data)
     let tags = request.only(['tags'])
     if(tags.tags.length > 0) {
       data['tags'] = {create: []}
@@ -29,7 +67,6 @@ export default class NodesController {
         data['tags'].create.push({tag: {connect: {id: tag.id}}})
       })
     }
-    console.log(data)
     const node = await prisma.node.create({
       data: data
     })
